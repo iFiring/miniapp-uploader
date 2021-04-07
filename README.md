@@ -32,12 +32,34 @@ USAGE
   # 命令列表
 
   <!-- commands -->
+* [`miniuper hello [FILE]`](#miniuper-hello-file)
 * [`miniuper help [COMMAND]`](#miniuper-help-command)
+* [`miniuper init`](#miniuper-init)
 * [`miniuper upload [TYPE]`](#miniuper-upload-type)
+
+## `miniuper hello [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ miniuper hello [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+
+EXAMPLE
+  $ miniuper hello
+  hello world from ./src/commands/hello.t
+```
+
+_See code: [src/commands/hello.ts](https://github.com/iFiring/miniapp-uploader/blob/main/src/commands/hello.ts)_
 
 ## `miniuper help [COMMAND]`
 
-帮助命令
+display help for miniuper
 
 ```
 USAGE
@@ -50,11 +72,25 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_详见代码: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
+
+## `miniuper init`
+
+初始化配置命令
+
+```
+USAGE
+  $ miniuper init
+
+OPTIONS
+  -h, --help       show CLI help
+```
+
+_See code: [src/commands/init.ts](https://github.com/iFiring/miniapp-uploader/blob/main/src/commands/init.ts)_
 
 ## `miniuper upload [TYPE]`
 
-上传命令
+小程序上传命令
 
 ```
 USAGE
@@ -66,9 +102,9 @@ ARGUMENTS
 OPTIONS
   -d, --description=description  (required) 版本描述
   -h, --help                     展示 CLI 帮助
-  -r, --robot=robot              CI机器人序号 0 - 30
+  -r, --robot=robot              [default: 1] CI机器人序号 1 - 30
   -v, --version=version          (required) 上传版本号
 ```
 
-_详见代码: [src/commands/upload.ts](https://github.com/iFiring/miniapp-uploader/blob/v0.0.1/src/commands/upload.ts)_
+_See code: [src/commands/upload.ts](https://github.com/iFiring/miniapp-uploader/blob/main/src/commands/upload.ts)_
 <!-- commandsstop -->

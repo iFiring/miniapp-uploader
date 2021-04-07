@@ -28,7 +28,8 @@ export default class Upload extends Command {
   async run() {
     const {args, flags} = this.parse(Upload)
     const _PWD_ = process.cwd()
-    let projectConfig: Config
+
+    let projectConfig: Config.Configs
     try {
       projectConfig = JSON.parse(fs.readFileSync(`${_PWD_}/miniuper.json`, 'utf8'))
     } catch (error) {
@@ -36,13 +37,12 @@ export default class Upload extends Command {
       log('当前目录下 miniuper.json 配置文件读取失败，请使用 miniuper init 命令生成该配置文件')
       return
     }
-    log(flags)
 
     const {type} = args
-    if (!type || type === 'wechat') {
+    if ((!type || type === 'wechat') && projectConfig.wechat) {
       // 微信小程序上传
       log(chalk.yellow('微信小程序开始上传\n'))
-      const {wechat: wechatConf} = projectConfig
+      const wechatConf = projectConfig.wechat
       table && table({
         appid: wechatConf.appid,
         projectPath: wechatConf.projectPath,
@@ -54,8 +54,8 @@ export default class Upload extends Command {
       const project = new WechatInit({
         appid: wechatConf.appid,
         type: 'miniProgram',
-        projectPath: `${_PWD_}${wechatConf.projectPath}`,
-        privateKeyPath: `${_PWD_}${wechatConf.privateKeyPath}`,
+        projectPath: `${_PWD_}/${wechatConf.projectPath}`,
+        privateKeyPath: `${_PWD_}/${wechatConf.privateKeyPath}`,
         ignores: ['node_modules/**/*'],
       })
 
@@ -90,16 +90,17 @@ export default class Upload extends Command {
       }
     }
 
-    if (!type || type === 'alipay') {
+    if ((!type || type === 'alipay') && projectConfig.alipay) {
       // 支付宝小程序上传
       log(chalk.yellow('支付宝小程序开始上传\n'))
-      const {alipay: alipayConf} = projectConfig
+      const alipayConf = projectConfig.alipay
       table && table({
         appId: alipayConf.appid,
         toolId: alipayConf.toolId,
         projectPath: alipayConf.projectPath,
         privateKey: `${alipayConf.privateKey.slice(0, 10)}...`,
         version: flags.version,
+        experience: alipayConf.experience,
       })
       alipayInit({
         toolId: alipayConf.toolId,
@@ -107,11 +108,11 @@ export default class Upload extends Command {
       })
       try {
         const alipayUploadResult = await alipayUpload({
-          project: `${_PWD_}${alipayConf.projectPath}`,
+          project: `${_PWD_}/${alipayConf.projectPath}`,
           appId: alipayConf.appid,
           packageVersion: flags.version, // 为空则线上包版本自增0.0.1
           clientType: 'alipay',
-          experience: true,
+          experience: alipayConf.experience,
           onProgressUpdate: log,
         })
         log(chalk.green('\n支付宝小程序上传成功!'))
@@ -123,5 +124,6 @@ export default class Upload extends Command {
       }
     }
     log(chalk.green('\nDone!'))
+    this.exit(0)
   }
 }
