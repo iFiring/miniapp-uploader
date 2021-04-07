@@ -1,10 +1,10 @@
 {
   "wechat": {
-    "appid": "wxappid",
+    "appid": "appid",
+    "projectPath": "projectPath",
+    "privateKeyPath": "private.XXX.key",
     "type": "miniProgram",
     "robot": 1,
-    "projectPath": "",
-    "privateKeyPath": "/private.XXX.key",
     "setting": {
       "es6": false,
       "es7": false,
@@ -17,9 +17,10 @@
     }
   },
   "alipay": {
-    "appid": "0000000000000000",
-    "toolId": "",
-    "projectPath": "",
-    "privateKey": "XXXXXXXXXXXXXXXXX"
+    "appid": "appid",
+    "toolId": "toolId",
+    "projectPath": "projectPath",
+    "privateKey": "privateKey",
+    "experience": true
   }
 }
