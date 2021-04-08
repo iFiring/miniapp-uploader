@@ -1,12 +1,12 @@
 import {Command, flags} from '@oclif/command'
-import * as chalk from 'chalk'
-import * as fs from 'fs'
 import {Project as WechatInit, upload as wechatUpload} from 'miniprogram-ci'
 import {setConfig as alipayInit, miniUpload as alipayUpload} from 'miniu'
 
 import {Config} from '../types'
 import {textInterpolations} from '../utils'
 
+const fs = require('fs')
+const chalk = require('chalk')
 const fetch = require('node-fetch')
 // eslint-disable-next-line no-console
 // eslint-disable-next-line node/no-unsupported-features/node-builtins

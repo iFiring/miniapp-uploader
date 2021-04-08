@@ -55,7 +55,7 @@ EXAMPLE
   hello world from ./src/commands/hello.t
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/iFiring/miniapp-uploader/blob/main/src/commands/hello.ts)_
+_See code: [src/commands/hello.ts](https://github.com/iFiring/miniapp-uploader/blob/v0.0.1/src/commands/hello.ts)_
 
 ## `miniuper help [COMMAND]`
 
@@ -83,10 +83,10 @@ USAGE
   $ miniuper init
 
 OPTIONS
-  -h, --help       show CLI help
+  -h, --help  展示 CLI 帮助
 ```
 
-_See code: [src/commands/init.ts](https://github.com/iFiring/miniapp-uploader/blob/main/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/iFiring/miniapp-uploader/blob/v0.0.1/src/commands/init.ts)_
 
 ## `miniuper upload [TYPE]`
 
@@ -106,5 +106,5 @@ OPTIONS
   -v, --version=version          (required) 上传版本号
 ```
 
-_See code: [src/commands/upload.ts](https://github.com/iFiring/miniapp-uploader/blob/main/src/commands/upload.ts)_
+_See code: [src/commands/upload.ts](https://github.com/iFiring/miniapp-uploader/blob/v0.0.1/src/commands/upload.ts)_
 <!-- commandsstop -->
