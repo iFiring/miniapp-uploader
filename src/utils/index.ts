@@ -16,3 +16,6 @@ export const validateInput = (input: string): true | string =>  {
   return '请输入有效值'
 }
 
+export const textInterpolations = (str: string, type: string, value: string | undefined): string => {
+  return str.replace(new RegExp(`{{${type}}}`, 'g'), value || '')
+}

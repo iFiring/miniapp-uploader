@@ -19,13 +19,20 @@ export namespace Config {
     privateKeyPath: string; // 私钥，在获取项目属性和上传时用于鉴权使用，在 微信公众平台 上登录后下载
     setting?: WechatConfigSetting; // 编译设置
   }
+  // 体验二维码自动推送
+  interface AlipayExperience {
+    url: string;
+    method: string;
+    contentType: string;
+    body: string;
+  }
   // 支付宝小程序配置
   interface AlipayConfig {
     appid: string; // 小程序的appid
     toolId: string; // 工具id
     projectPath: string; // 项目的路径
     privateKey: string; // 工具私钥
-    experience?: boolean; // 上传成功后，自动设置为体验版本, 该功能只针对小程序主账号生效
+    experience?: AlipayExperience; // 上传成功后，自动设置为体验版本, 该功能只针对小程序主账号生效(体验二维码自动推送机器人)
   }
   interface Configs {
     wechat?: WechatConfig;
