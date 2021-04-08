@@ -21,6 +21,11 @@
     "toolId": "toolId",
     "projectPath": "projectPath",
     "privateKey": "privateKey",
-    "experience": true
+    "experience": {
+      "url": "",
+      "method": "",
+      "contentType": "application/json",
+      "body": "{\"支付宝小程序体验版\":\"{{qrCodeUrl}}\",\"版本号\":\"{{version}}\",\"版本描述\":\"{{description}}\"}"
+    }
   }
 }

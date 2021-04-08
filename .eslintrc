@@ -2,5 +2,9 @@
   "extends": [
     "oclif",
     "oclif-typescript"
-  ]
+  ],
+  "rules": {
+    "complexity": ["error", 64],
+    "max-depth": 0
+  }
 }

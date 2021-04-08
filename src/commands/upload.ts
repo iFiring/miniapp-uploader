@@ -5,7 +5,9 @@ import {Project as WechatInit, upload as wechatUpload} from 'miniprogram-ci'
 import {setConfig as alipayInit, miniUpload as alipayUpload} from 'miniu'
 
 import {Config} from '../types'
+import {textInterpolations} from '../utils'
 
+const fetch = require('node-fetch')
 // eslint-disable-next-line no-console
 // eslint-disable-next-line node/no-unsupported-features/node-builtins
 const {log, table} = console
@@ -100,7 +102,7 @@ export default class Upload extends Command {
         projectPath: alipayConf.projectPath,
         privateKey: `${alipayConf.privateKey.slice(0, 10)}...`,
         version: flags.version,
-        experience: alipayConf.experience,
+        experience: Boolean(alipayConf.experience),
       })
       alipayInit({
         toolId: alipayConf.toolId,
@@ -112,11 +114,30 @@ export default class Upload extends Command {
           appId: alipayConf.appid,
           packageVersion: flags.version, // 为空则线上包版本自增0.0.1
           clientType: 'alipay',
-          experience: alipayConf.experience,
+          experience: Boolean(alipayConf.experience),
           onProgressUpdate: log,
         })
         log(chalk.green('\n支付宝小程序上传成功!'))
         log(alipayUploadResult)
+        if (alipayUploadResult.qrCodeUrl && alipayConf.experience && alipayConf.experience.url && alipayConf.experience.method) {
+          try {
+            const {qrCodeUrl} = alipayUploadResult
+            const {url, method, contentType} = alipayConf.experience
+            let {body} = alipayConf.experience
+            body = textInterpolations(body, 'qrCodeUrl', qrCodeUrl)
+            body = textInterpolations(body, 'version', flags.version)
+            body = textInterpolations(body, 'description', flags.description)
+            const result = await fetch(url, {method, body: body, headers: {'Content-Type': contentType}}).then((res: any) => res.json())
+            if (result.errcode === 0) {
+              log(chalk.green('\n支付宝体验版二维码推送成功!'))
+            } else {
+              log(chalk.red('\n支付宝体验版二维码推送失败!'))
+            }
+          } catch (error) {
+            log(error)
+            log(chalk.red('\n支付宝体验版二维码推送失败!'))
+          }
+        }
       } catch (error) {
         log(chalk.red(`支付宝上传失败:${error} \n`))
         log(error)
