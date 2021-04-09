@@ -1,7 +1,7 @@
 {
   "name": "miniapp-uploader",
   "description": "小程序自动化代码上传工具",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "author": "iFiring",
   "bin": {
     "miniuper": "./bin/run"
@@ -11,6 +11,8 @@
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^3",
+    "miniprogram-ci": "^1.1.6",
+    "miniu": "^1.10.3",
     "chalk": "^4.1.0",
     "inquirer": "^8.0.0",
     "node-fetch": "^2.6.1",
@@ -28,8 +30,6 @@
     "eslint": "^5.13",
     "eslint-config-oclif": "^3.1",
     "eslint-config-oclif-typescript": "^0.1",
-    "miniprogram-ci": "^1.1.6",
-    "miniu": "^1.10.3",
     "mocha": "^5",
     "nyc": "^14",
     "ts-node": "^8",
