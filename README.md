@@ -21,7 +21,7 @@ $ npm install -g miniapp-uploader
 $ miniuper COMMAND
 running command...
 $ miniuper (-v|--version|version)
-miniapp-uploader/0.0.1 darwin-x64 node-v12.13.0
+miniapp-uploader/0.0.4 darwin-x64 node-v12.13.0
 $ miniuper --help [COMMAND]
 USAGE
   $ miniuper COMMAND
@@ -55,7 +55,7 @@ EXAMPLE
   hello world from ./src/commands/hello.t
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/iFiring/miniapp-uploader/blob/v0.0.1/src/commands/hello.ts)_
+_See code: [src/commands/hello.ts](https://github.com/iFiring/miniapp-uploader/blob/v0.0.4/src/commands/hello.ts)_
 
 ## `miniuper help [COMMAND]`
 
@@ -86,7 +86,7 @@ OPTIONS
   -h, --help  展示 CLI 帮助
 ```
 
-_See code: [src/commands/init.ts](https://github.com/iFiring/miniapp-uploader/blob/v0.0.1/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/iFiring/miniapp-uploader/blob/v0.0.4/src/commands/init.ts)_
 
 ## `miniuper upload [TYPE]`
 
@@ -100,11 +100,11 @@ ARGUMENTS
   TYPE  小程序类型 wechat|alipay (非必填)
 
 OPTIONS
-  -d, --description=description  (required) 版本描述
+  -d, --description=description  版本描述
   -h, --help                     展示 CLI 帮助
   -r, --robot=robot              [default: 1] CI机器人序号 1 - 30
-  -v, --version=version          (required) 上传版本号
+  -v, --version=version          上传版本号
 ```
 
-_See code: [src/commands/upload.ts](https://github.com/iFiring/miniapp-uploader/blob/v0.0.1/src/commands/upload.ts)_
+_See code: [src/commands/upload.ts](https://github.com/iFiring/miniapp-uploader/blob/v0.0.4/src/commands/upload.ts)_
 <!-- commandsstop -->

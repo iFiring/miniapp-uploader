@@ -18,9 +18,9 @@ export default class Upload extends Command {
   static flags = {
     help: flags.help({char: 'h', description: '展示 CLI 帮助'}),
     // flag with no value (-v, --version)
-    version: flags.build({char: 'v', description: '上传版本号', required: true})(),
+    version: flags.build({char: 'v', description: '上传版本号'})(),
     // flag with no value (-d, --description)
-    description: flags.build({char: 'd', description: '版本描述', required: true})(),
+    description: flags.build({char: 'd', description: '版本描述'})(),
     // flag with no value (-r, --robot)
     robot: flags.build({char: 'r', description: 'CI机器人序号 1 - 30', parse: (robot: string): any => Number(robot), default: 1})(),
   }
@@ -49,8 +49,8 @@ export default class Upload extends Command {
         appid: wechatConf.appid,
         projectPath: wechatConf.projectPath,
         privateKeyPath: wechatConf.privateKeyPath,
-        version: flags.version,
-        desc: flags.description,
+        version: flags.version === 'undefined' ? '0.0.0' : flags.version || '0.0.0',
+        desc: flags.description || '空的版本描述',
         robot: flags.robot || wechatConf.robot || 1,
       })
       const project = new WechatInit({
@@ -64,8 +64,8 @@ export default class Upload extends Command {
       try {
         const wechatUploadResult = await wechatUpload({
           project: project,
-          version: flags.version || '0.0.0',
-          desc: flags.description,
+          version: flags.version === 'undefined' ? '0.0.0' : flags.version || '0.0.0',
+          desc: flags.description || '空的版本描述',
           robot: flags.robot || wechatConf.robot || 1,
           setting: wechatConf.setting,
           onProgressUpdate: (progress: string | MiniProgramCI.ITaskStatus): void => {
@@ -101,7 +101,7 @@ export default class Upload extends Command {
         toolId: alipayConf.toolId,
         projectPath: alipayConf.projectPath,
         privateKey: `${alipayConf.privateKey.slice(0, 10)}...`,
-        version: flags.version,
+        version: flags.version === 'undefined' ? undefined : flags.version,
         experience: Boolean(alipayConf.experience),
       })
       alipayInit({
@@ -112,7 +112,7 @@ export default class Upload extends Command {
         const alipayUploadResult = await alipayUpload({
           project: `${_PWD_}/${alipayConf.projectPath}`,
           appId: alipayConf.appid,
-          packageVersion: flags.version, // 为空则线上包版本自增0.0.1
+          packageVersion: flags.version === 'undefined' ? undefined : flags.version, // 为undefined则线上包版本自增0.0.1
           clientType: 'alipay',
           experience: Boolean(alipayConf.experience),
           onProgressUpdate: log,
@@ -121,12 +121,12 @@ export default class Upload extends Command {
         log(alipayUploadResult)
         if (alipayUploadResult.qrCodeUrl && alipayConf.experience && alipayConf.experience.url && alipayConf.experience.method) {
           try {
-            const {qrCodeUrl} = alipayUploadResult
+            const {qrCodeUrl, packageVersion} = alipayUploadResult
             const {url, method, contentType} = alipayConf.experience
             let {body} = alipayConf.experience
             body = textInterpolations(body, 'qrCodeUrl', qrCodeUrl)
-            body = textInterpolations(body, 'version', flags.version)
-            body = textInterpolations(body, 'description', flags.description)
+            body = textInterpolations(body, 'version', packageVersion)
+            body = textInterpolations(body, 'description', flags.description || '空的版本描述')
             const result = await fetch(url, {method, body: body, headers: {'Content-Type': contentType}}).then((res: any) => res.json())
             if (result.errcode === 0) {
               log(chalk.green('\n支付宝体验版二维码推送成功!'))
