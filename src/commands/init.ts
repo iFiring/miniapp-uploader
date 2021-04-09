@@ -1,11 +1,11 @@
 import {Command, flags} from '@oclif/command'
 import {Config} from '../types'
 import {mergeDeep, whenHasType, validateInput} from '../utils'
+import configTpl from '../config/miniuper.tpl'
 
 const fs = require('fs')
 const chalk = require('chalk')
 const inquirer = require('inquirer')
-const configTpl = require('../config/miniuper.tpl.json')
 // eslint-disable-next-line no-console
 const {log} = console
 
