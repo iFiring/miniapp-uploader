@@ -102,6 +102,7 @@ export default class Upload extends Command {
         projectPath: alipayConf.projectPath,
         privateKey: `${alipayConf.privateKey.slice(0, 10)}...`,
         version: flags.version === 'undefined' ? undefined : flags.version,
+        desc: flags.description || '空的版本描述',
         experience: Boolean(alipayConf.experience),
       })
       alipayInit({
@@ -144,7 +145,7 @@ export default class Upload extends Command {
         return
       }
     }
-    log(chalk.green('\nDone!'))
+    log(chalk.green('\nUpload Done!'))
     this.exit(0)
   }
 }
