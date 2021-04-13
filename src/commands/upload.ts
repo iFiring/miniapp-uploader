@@ -36,7 +36,7 @@ export default class Upload extends Command {
       projectConfig = JSON.parse(fs.readFileSync(`${_PWD_}/miniuper.json`, 'utf8'))
     } catch (error) {
       log(error)
-      log('当前目录下 miniuper.json 配置文件读取失败，请使用 miniuper init 命令生成该配置文件')
+      log('当前目录下 miniuper.json 配置文件读取失败，请使用 miniuper init 命令生成该配置文件!')
       return
     }
 
@@ -96,18 +96,26 @@ export default class Upload extends Command {
       // 支付宝小程序上传
       log(chalk.yellow('支付宝小程序开始上传\n'))
       const alipayConf = projectConfig.alipay
+      let privateKey: string
+      try {
+        privateKey = fs.readFileSync(`${_PWD_}/${alipayConf.privateKeyPath}`, 'utf8')
+      } catch (error) {
+        log(error)
+        log(`当前目录下支付宝上传私钥文件 ${alipayConf.privateKeyPath} 读取失败，检查该文件!`)
+        return
+      }
       table && table({
         appId: alipayConf.appid,
         toolId: alipayConf.toolId,
         projectPath: alipayConf.projectPath,
-        privateKey: `${alipayConf.privateKey.slice(0, 10)}...`,
+        privateKey: alipayConf.privateKeyPath,
         version: flags.version === 'undefined' ? undefined : flags.version,
         desc: flags.description || '空的版本描述',
         experience: Boolean(alipayConf.experience),
       })
       alipayInit({
         toolId: alipayConf.toolId,
-        privateKey: alipayConf.privateKey,
+        privateKey,
       })
       try {
         const alipayUploadResult = await alipayUpload({

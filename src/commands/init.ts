@@ -52,7 +52,7 @@ export default class Init extends Command {
         {
           type: 'input',
           name: 'wechatPrivateKeyPath',
-          message: `${chalk.green('微信')}小程序的代码上传密钥`,
+          message: `${chalk.green('微信')}小程序代码上传的密钥（相对）路径`,
           when: (anws: any) => whenHasType(anws, 'wechat'),
           validate: validateInput,
           default: function () {
@@ -68,13 +68,6 @@ export default class Init extends Command {
         },
         {
           type: 'input',
-          name: 'alipayProjectPath',
-          message: `${chalk.cyan('支付宝')}小程序的上传目录（相对路径）`,
-          when: (anws: any) => whenHasType(anws, 'alipay'),
-          validate: validateInput,
-        },
-        {
-          type: 'input',
           name: 'alipayToolId',
           message: `${chalk.cyan('支付宝')}小程序的工具ID`,
           when: (anws: any) => whenHasType(anws, 'alipay'),
@@ -82,9 +75,19 @@ export default class Init extends Command {
         },
         {
           type: 'input',
-          name: 'alipayPrivateKey',
-          message: `${chalk.cyan('支付宝')}小程序的工具私钥`,
+          name: 'alipayProjectPath',
+          message: `${chalk.cyan('支付宝')}小程序的上传目录（相对路径）`,
           when: (anws: any) => whenHasType(anws, 'alipay'),
+          validate: validateInput,
+        },
+        {
+          type: 'input',
+          name: 'alipayPrivateKeyPath',
+          message: `${chalk.cyan('支付宝')}小程序代码上传的私钥（相对）路径`,
+          when: (anws: any) => whenHasType(anws, 'alipay'),
+          default: function () {
+            return 'pkcs8-private-pem'
+          },
         },
       ])
     } catch (error) {
@@ -105,7 +108,7 @@ export default class Init extends Command {
       appid: answers.alipayAppId,
       projectPath: answers.alipayProjectPath,
       toolId: answers.alipayToolId,
-      privateKey: answers.alipayPrivateKey,
+      privateKeyPath: answers.alipayPrivateKeyPath,
     }
     const initConfig: Config.Configs = {}
     if (whenHasType(answers, 'wechat')) {
