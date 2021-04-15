@@ -55,13 +55,20 @@ export default class Upload extends Command {
         desc: flags.description || '空的版本描述',
         robot: flags.robot || wechatConf.robot || 1,
       })
-      const project = new WechatInit({
-        appid: wechatConf.appid,
-        type: 'miniProgram',
-        projectPath: `${_PWD_}/${wechatConf.projectPath}`,
-        privateKeyPath: `${_PWD_}/${wechatConf.privateKeyPath}`,
-        ignores: ['node_modules/**/*'],
-      })
+      let project
+      try {
+        project = new WechatInit({
+          appid: wechatConf.appid,
+          type: 'miniProgram',
+          projectPath: `${_PWD_}/${wechatConf.projectPath}`,
+          privateKeyPath: `${_PWD_}/${wechatConf.privateKeyPath}`,
+          ignores: ['node_modules/**/*'],
+        })
+      } catch (error) {
+        log(chalk.red(`微信初始化失败:${error} \n`))
+        log(error)
+        return
+      }
 
       try {
         const wechatUploadResult = await wechatUpload({

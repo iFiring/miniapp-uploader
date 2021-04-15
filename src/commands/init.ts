@@ -23,90 +23,64 @@ export default class Init extends Command {
     const _PWD_ = flags.path ? flags.path : process.cwd()
     const answers: any = {}
     try {
-      Object.assign(answers, await inquirer.prompt(
-        {
-          type: 'checkbox',
-          name: 'type',
-          message: '请选择您的小程序类型（多选）',
-          choices: [
-            {
-              name: 'wechat',
-              checked: true,
-            },
-            {
-              name: 'alipay',
-            },
-          ],
+      Object.assign(answers, await inquirer.prompt({
+        type: 'checkbox',
+        name: 'type',
+        message: '请选择您的小程序类型（多选）',
+        choices: [{name: 'wechat', checked: true}, {name: 'alipay'}],
+      }))
+      Object.assign(answers, await inquirer.prompt({
+        type: 'input', name: 'wechatAppId', message: `${chalk.green('微信')}小程序的AppId`,
+        when: () => whenHasType(answers, 'wechat'),
+        validate: validateInput,
+      }))
+      Object.assign(answers, await inquirer.prompt({
+        type: 'input',
+        name: 'wechatProjectPath',
+        message: `${chalk.green('微信')}小程序的上传目录（相对路径）`,
+        when: () => whenHasType(answers, 'wechat'),
+        validate: validateInput,
+      }))
+      Object.assign(answers, await inquirer.prompt({
+        type: 'input',
+        name: 'wechatPrivateKeyPath',
+        message: `${chalk.green('微信')}小程序代码上传的密钥（相对）路径`,
+        when: () => whenHasType(answers, 'wechat'),
+        validate: validateInput,
+        default: function () {
+          return 'private.XXX.key'
         },
-      ))
-      Object.assign(answers, await inquirer.prompt(
-        {
-          type: 'input',
-          name: 'wechatAppId',
-          message: `${chalk.green('微信')}小程序的AppId`,
-          when: () => whenHasType(answers, 'wechat'),
-          validate: validateInput,
+      }))
+      Object.assign(answers, await inquirer.prompt({
+        type: 'input',
+        name: 'alipayAppId',
+        message: `${chalk.cyan('支付宝')}小程序的AppId`,
+        when: () => whenHasType(answers, 'alipay'),
+        validate: validateInput,
+      }))
+      Object.assign(answers, await inquirer.prompt({
+        type: 'input',
+        name: 'alipayToolId',
+        message: `${chalk.cyan('支付宝')}小程序的工具ID`,
+        when: () => whenHasType(answers, 'alipay'),
+        validate: validateInput,
+      }))
+      Object.assign(answers, await inquirer.prompt({
+        type: 'input',
+        name: 'alipayProjectPath',
+        message: `${chalk.cyan('支付宝')}小程序的上传目录（相对路径）`,
+        when: () => whenHasType(answers, 'alipay'),
+        validate: validateInput,
+      }))
+      Object.assign(answers, await inquirer.prompt({
+        type: 'input',
+        name: 'alipayPrivateKeyPath',
+        message: `${chalk.cyan('支付宝')}小程序代码上传的私钥（相对）路径`,
+        when: () => whenHasType(answers, 'alipay'),
+        default: function () {
+          return 'pkcs8-private-pem'
         },
-      ))
-      Object.assign(answers, await inquirer.prompt(
-        {
-          type: 'input',
-          name: 'wechatProjectPath',
-          message: `${chalk.green('微信')}小程序的上传目录（相对路径）`,
-          when: () => whenHasType(answers, 'wechat'),
-          validate: validateInput,
-        },
-      ))
-      Object.assign(answers, await inquirer.prompt(
-        {
-          type: 'input',
-          name: 'wechatPrivateKeyPath',
-          message: `${chalk.green('微信')}小程序代码上传的密钥（相对）路径`,
-          when: () => whenHasType(answers, 'wechat'),
-          validate: validateInput,
-          default: function () {
-            return 'private.XXX.key'
-          },
-        },
-      ))
-      Object.assign(answers, await inquirer.prompt(
-        {
-          type: 'input',
-          name: 'alipayAppId',
-          message: `${chalk.cyan('支付宝')}小程序的AppId`,
-          when: () => whenHasType(answers, 'alipay'),
-          validate: validateInput,
-        },
-      ))
-      Object.assign(answers, await inquirer.prompt(
-        {
-          type: 'input',
-          name: 'alipayToolId',
-          message: `${chalk.cyan('支付宝')}小程序的工具ID`,
-          when: () => whenHasType(answers, 'alipay'),
-          validate: validateInput,
-        },
-      ))
-      Object.assign(answers, await inquirer.prompt(
-        {
-          type: 'input',
-          name: 'alipayProjectPath',
-          message: `${chalk.cyan('支付宝')}小程序的上传目录（相对路径）`,
-          when: () => whenHasType(answers, 'alipay'),
-          validate: validateInput,
-        },
-      ))
-      Object.assign(answers, await inquirer.prompt(
-        {
-          type: 'input',
-          name: 'alipayPrivateKeyPath',
-          message: `${chalk.cyan('支付宝')}小程序代码上传的私钥（相对）路径`,
-          when: () => whenHasType(answers, 'alipay'),
-          default: function () {
-            return 'pkcs8-private-pem'
-          },
-        },
-      ))
+      }))
     } catch (error) {
       log(error)
     }
