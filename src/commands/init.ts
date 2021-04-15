@@ -108,12 +108,7 @@ export default class Init extends Command {
         },
       ))
     } catch (error) {
-      if (error.isTtyError) {
-        // Prompt couldn't be rendered in the current environment
-      } else {
-        // Something else went wrong
-        log(error)
-      }
+      log(error)
     }
 
     const wechatConfig: Config.WechatConfig = {
