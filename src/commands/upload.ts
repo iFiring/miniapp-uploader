@@ -23,13 +23,15 @@ export default class Upload extends Command {
     description: flags.build({char: 'd', description: '版本描述'})(),
     // flag with no value (-r, --robot)
     robot: flags.build({char: 'r', description: 'CI机器人序号 1 - 30', parse: (robot: string): any => Number(robot), default: 1})(),
+    // flag with no value (-p, --path)
+    path: flags.build({char: 'p', description: '工作路径', default: process.cwd()})(),
   }
 
   static args = [{name: 'type', description: '小程序类型 wechat|alipay (非必填)'}]
 
   async run() {
     const {args, flags} = this.parse(Upload)
-    const _PWD_ = process.cwd()
+    const _PWD_ = flags.path ? flags.path : process.cwd()
 
     let projectConfig: Config.Configs
     try {
@@ -154,6 +156,5 @@ export default class Upload extends Command {
       }
     }
     log(chalk.green('\nUpload Done!'))
-    this.exit(0)
   }
 }

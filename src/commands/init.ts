@@ -14,13 +14,16 @@ export default class Init extends Command {
 
   static flags = {
     help: flags.help({char: 'h', description: '展示 CLI 帮助'}),
+    // flag with no value (-p, --path)
+    path: flags.build({char: 'p', description: '工作路径', default: process.cwd()})(),
   }
 
   async run() {
-    this.parse(Init)
-    let answers
+    const {flags} = this.parse(Init)
+    const _PWD_ = flags.path ? flags.path : process.cwd()
+    const answers: any = {}
     try {
-      answers = await inquirer.prompt([
+      Object.assign(answers, await inquirer.prompt(
         {
           type: 'checkbox',
           name: 'type',
@@ -35,61 +38,75 @@ export default class Init extends Command {
             },
           ],
         },
+      ))
+      Object.assign(answers, await inquirer.prompt(
         {
           type: 'input',
           name: 'wechatAppId',
           message: `${chalk.green('微信')}小程序的AppId`,
-          when: (anws: any) => whenHasType(anws, 'wechat'),
+          when: () => whenHasType(answers, 'wechat'),
           validate: validateInput,
         },
+      ))
+      Object.assign(answers, await inquirer.prompt(
         {
           type: 'input',
           name: 'wechatProjectPath',
           message: `${chalk.green('微信')}小程序的上传目录（相对路径）`,
-          when: (anws: any) => whenHasType(anws, 'wechat'),
+          when: () => whenHasType(answers, 'wechat'),
           validate: validateInput,
         },
+      ))
+      Object.assign(answers, await inquirer.prompt(
         {
           type: 'input',
           name: 'wechatPrivateKeyPath',
           message: `${chalk.green('微信')}小程序代码上传的密钥（相对）路径`,
-          when: (anws: any) => whenHasType(anws, 'wechat'),
+          when: () => whenHasType(answers, 'wechat'),
           validate: validateInput,
           default: function () {
             return 'private.XXX.key'
           },
         },
+      ))
+      Object.assign(answers, await inquirer.prompt(
         {
           type: 'input',
           name: 'alipayAppId',
           message: `${chalk.cyan('支付宝')}小程序的AppId`,
-          when: (anws: any) => whenHasType(anws, 'alipay'),
+          when: () => whenHasType(answers, 'alipay'),
           validate: validateInput,
         },
+      ))
+      Object.assign(answers, await inquirer.prompt(
         {
           type: 'input',
           name: 'alipayToolId',
           message: `${chalk.cyan('支付宝')}小程序的工具ID`,
-          when: (anws: any) => whenHasType(anws, 'alipay'),
+          when: () => whenHasType(answers, 'alipay'),
           validate: validateInput,
         },
+      ))
+      Object.assign(answers, await inquirer.prompt(
         {
           type: 'input',
           name: 'alipayProjectPath',
           message: `${chalk.cyan('支付宝')}小程序的上传目录（相对路径）`,
-          when: (anws: any) => whenHasType(anws, 'alipay'),
+          when: () => whenHasType(answers, 'alipay'),
           validate: validateInput,
         },
+      ))
+      Object.assign(answers, await inquirer.prompt(
         {
           type: 'input',
           name: 'alipayPrivateKeyPath',
           message: `${chalk.cyan('支付宝')}小程序代码上传的私钥（相对）路径`,
-          when: (anws: any) => whenHasType(anws, 'alipay'),
+          when: () => whenHasType(answers, 'alipay'),
           default: function () {
             return 'pkcs8-private-pem'
           },
         },
-      ])
+      ))
     } catch (error) {
       if (error.isTtyError) {
         // Prompt couldn't be rendered in the current environment
@@ -119,11 +136,10 @@ export default class Init extends Command {
     }
     try {
       log(initConfig)
-      fs.writeFileSync(`${process.cwd()}/miniuper.json`, JSON.stringify(initConfig, null, 2))
+      fs.writeFileSync(`${_PWD_}/miniuper.json`, JSON.stringify(initConfig, null, 2))
     } catch (error) {
       log(error)
     }
     log(chalk.green('\n Init Done!'))
-    this.exit(0)
   }
 }
