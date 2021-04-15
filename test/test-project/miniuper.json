@@ -1,0 +1,31 @@
+{
+  "wechat": {
+    "privateKeyPath": "",
+    "appid": "",
+    "projectPath": "dist/wechat",
+    "type": "miniProgram",
+    "robot": 1,
+    "setting": {
+      "es6": false,
+      "es7": false,
+      "minify": true,
+      "codeProtect": true,
+      "minifyJS": false,
+      "minifyWXML": false,
+      "minifyWXSS": false,
+      "autoPrefixWXSS": false
+    }
+  },
+  "alipay": {
+    "privateKeyPath": "",
+    "toolId": "",
+    "appid": "",
+    "experience": {
+      "method": "METHOD",
+      "url": "https://oapi.dingtalk.com/robot/send?access_token=a7251671751e04e7bed6cb1248bb88860c415a8c38d83a2829feb757e31626b8",
+      "contentType": "application/json",
+      "body": "{\"msgtype\":\"markdown\",\"markdown\":{\"title\":\"体验版\",\"text\":\"#### 支付宝体验版：\n![支付宝体验版]({{qrCodeUrl}})\n##### 版本号: {{version}}\n##### 版本描述: {{description}}\"},\"at\":{\"isAtAll\":true}}"
+    },
+    "projectPath": "dist/alipay"
+  }
+}

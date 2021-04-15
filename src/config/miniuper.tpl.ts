@@ -20,7 +20,7 @@ export default {
     appid: 'appid',
     toolId: 'toolId',
     projectPath: 'projectPath',
-    privateKey: 'privateKey',
+    privateKeyPath: 'pkcs8-private-pem',
     experience: {
       url: '',
       method: '',

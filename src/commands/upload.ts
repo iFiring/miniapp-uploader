@@ -23,20 +23,22 @@ export default class Upload extends Command {
     description: flags.build({char: 'd', description: '版本描述'})(),
     // flag with no value (-r, --robot)
     robot: flags.build({char: 'r', description: 'CI机器人序号 1 - 30', parse: (robot: string): any => Number(robot), default: 1})(),
+    // flag with no value (-p, --path)
+    path: flags.build({char: 'p', description: '工作路径', default: process.cwd()})(),
   }
 
   static args = [{name: 'type', description: '小程序类型 wechat|alipay (非必填)'}]
 
   async run() {
     const {args, flags} = this.parse(Upload)
-    const _PWD_ = process.cwd()
+    const _PWD_ = flags.path ? flags.path : process.cwd()
 
     let projectConfig: Config.Configs
     try {
       projectConfig = JSON.parse(fs.readFileSync(`${_PWD_}/miniuper.json`, 'utf8'))
     } catch (error) {
       log(error)
-      log('当前目录下 miniuper.json 配置文件读取失败，请使用 miniuper init 命令生成该配置文件')
+      log('当前目录下 miniuper.json 配置文件读取失败，请使用 miniuper init 命令生成该配置文件!')
       return
     }
 
@@ -53,13 +55,20 @@ export default class Upload extends Command {
         desc: flags.description || '空的版本描述',
         robot: flags.robot || wechatConf.robot || 1,
       })
-      const project = new WechatInit({
-        appid: wechatConf.appid,
-        type: 'miniProgram',
-        projectPath: `${_PWD_}/${wechatConf.projectPath}`,
-        privateKeyPath: `${_PWD_}/${wechatConf.privateKeyPath}`,
-        ignores: ['node_modules/**/*'],
-      })
+      let project
+      try {
+        project = new WechatInit({
+          appid: wechatConf.appid,
+          type: 'miniProgram',
+          projectPath: `${_PWD_}/${wechatConf.projectPath}`,
+          privateKeyPath: `${_PWD_}/${wechatConf.privateKeyPath}`,
+          ignores: ['node_modules/**/*'],
+        })
+      } catch (error) {
+        log(chalk.red(`微信初始化失败:${error} \n`))
+        log(error)
+        return
+      }
 
       try {
         const wechatUploadResult = await wechatUpload({
@@ -96,17 +105,26 @@ export default class Upload extends Command {
       // 支付宝小程序上传
       log(chalk.yellow('支付宝小程序开始上传\n'))
       const alipayConf = projectConfig.alipay
+      let privateKey: string
+      try {
+        privateKey = fs.readFileSync(`${_PWD_}/${alipayConf.privateKeyPath}`, 'utf8')
+      } catch (error) {
+        log(error)
+        log(`当前目录下支付宝上传私钥文件 ${alipayConf.privateKeyPath} 读取失败，检查该文件!`)
+        return
+      }
       table && table({
         appId: alipayConf.appid,
         toolId: alipayConf.toolId,
         projectPath: alipayConf.projectPath,
-        privateKey: `${alipayConf.privateKey.slice(0, 10)}...`,
+        privateKey: alipayConf.privateKeyPath,
         version: flags.version === 'undefined' ? undefined : flags.version,
+        desc: flags.description || '空的版本描述',
         experience: Boolean(alipayConf.experience),
       })
       alipayInit({
         toolId: alipayConf.toolId,
-        privateKey: alipayConf.privateKey,
+        privateKey,
       })
       try {
         const alipayUploadResult = await alipayUpload({
@@ -144,7 +162,6 @@ export default class Upload extends Command {
         return
       }
     }
-    log(chalk.green('\nDone!'))
-    this.exit(0)
+    log(chalk.green('\nUpload Done!'))
   }
 }
