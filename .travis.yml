@@ -8,11 +8,11 @@ env:
 cache: yarn
 
 script:
+  - yarn global add codecov
   - ./bin/run --version
   - ./bin/run --help
   - yarn run test
 
 
 after_success:
-  - ./node_modules/.bin/nyc report --reporter text-lcov > coverage.lcov
-  - bash < (curl -s https://codecov.io/bash)
+  - ./node_modules/.bin/nyc report --reporter text-lcov > coverage.lcov && codecov
