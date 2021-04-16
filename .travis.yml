@@ -1,6 +1,9 @@
 language: node_js
 node_js:
   - node
+env:
+  global:
+    - CODECOV_TOKEN=5e596f9e-8f4b-4a33-939e-cb3d95d85b05
 
 cache: yarn
 
