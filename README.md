@@ -5,7 +5,7 @@ miniapp-uploader
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/miniapp-uploader.svg)](https://npmjs.org/package/miniapp-uploader)
-[![Codecov](https://codecov.io/gh/iFiring/miniapp-uploader/branch/master/graph/badge.svg)](https://coveralls.io/github/iFiring/miniapp-uploader?branch=main)
+[![Coverage](https://coveralls.io/repos/github/iFiring/miniapp-uploader/badge.svg?branch=release/optimize-coveralls)](https://coveralls.io/github/iFiring/miniapp-uploader?branch=release/optimize-coveralls)
 [![Downloads/week](https://img.shields.io/npm/dw/miniapp-uploader.svg)](https://npmjs.org/package/miniapp-uploader)
 [![License](https://img.shields.io/npm/l/miniapp-uploader.svg)](https://github.com/iFiring/miniapp-uploader/blob/main/package.json)
 
