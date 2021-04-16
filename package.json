@@ -11,10 +11,10 @@
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^3",
-    "miniprogram-ci": "^1.1.6",
-    "miniu": "^1.10.3",
     "chalk": "^4.1.0",
     "inquirer": "^8.0.0",
+    "miniprogram-ci": "^1.1.6",
+    "miniu": "^1.10.3",
     "node-fetch": "^2.6.1",
     "ora": "^5.4.0",
     "tslib": "^1"
@@ -27,6 +27,7 @@
     "@types/node": "^14.14.37",
     "@types/node-fetch": "^2.5.10",
     "chai": "^4",
+    "coveralls": "^3.1.0",
     "eslint": "^5.13",
     "eslint-config-oclif": "^3.1",
     "eslint-config-oclif-typescript": "^0.1",
@@ -59,7 +60,7 @@
   "scripts": {
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif-dev readme",
-    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "test": "nyc --reporter lcov --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
   },
   "types": "lib/index.d.ts"
