@@ -146,3 +146,30 @@ COMMANDS
 ```
 
 _代码路径: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.2/src/commands/help.ts)_
+
+# 本地开发
+
+1. 下载代码包。
+```
+git clone https://github.com/iFiring/miniapp-uploader.git
+```
+
+2. 安装依赖。
+```sh-session
+pnpm i
+```
+
+3. 全局链接本地命令。
+```sh-session
+# 注意是 npm，不是 pnpm ！
+npm link
+
+# 全局调用
+miniuper hello
+```
+
+4. 开发并执行命令调试。
+```sh-session
+# 其他项目中调用
+miniuper init
+```
