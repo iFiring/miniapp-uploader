@@ -6,7 +6,7 @@ import {Config} from '../types'
 import {textInterpolations} from '../utils'
 
 const fs = require('fs')
-const chalk = require('chalk')
+const pc = require('picocolors')
 const fetch = require('node-fetch')
 // eslint-disable-next-line no-console
 // eslint-disable-next-line node/no-unsupported-features/node-builtins
@@ -45,7 +45,7 @@ export default class Upload extends Command {
     const {type} = args
     if ((!type || type === 'wechat') && projectConfig.wechat) {
       // 微信小程序上传
-      log(chalk.yellow('微信小程序开始上传\n'))
+      log(pc.yellow('微信小程序开始上传\n'))
       const wechatConf = projectConfig.wechat
       table && table({
         appid: wechatConf.appid,
@@ -65,7 +65,7 @@ export default class Upload extends Command {
           ignores: ['node_modules/**/*'],
         })
       } catch (error) {
-        log(chalk.red(`微信初始化失败:${error} \n`))
+        log(pc.red(`微信初始化失败:${error} \n`))
         log(error)
         return
       }
@@ -85,17 +85,17 @@ export default class Upload extends Command {
               if (status === 'doing') {
                 log(`${message}上传中...`)
               } else if (status === 'done') {
-                log(chalk.blue(`${message}上传成功!`))
+                log(pc.blue(`${message}上传成功!`))
               } else {
-                log(chalk.red(`上传失败:${message}`))
+                log(pc.red(`上传失败:${message}`))
               }
             }
           },
         })
-        log(chalk.green('\n微信小程序上传成功!'))
+        log(pc.green('\n微信小程序上传成功!'))
         log(wechatUploadResult)
       } catch (error) {
-        log(chalk.red(`微信上传失败:${error} \n`))
+        log(pc.red(`微信上传失败:${error} \n`))
         log(error)
         return
       }
@@ -103,7 +103,7 @@ export default class Upload extends Command {
 
     if ((!type || type === 'alipay') && projectConfig.alipay) {
       // 支付宝小程序上传
-      log(chalk.yellow('支付宝小程序开始上传\n'))
+      log(pc.yellow('支付宝小程序开始上传\n'))
       const alipayConf = projectConfig.alipay
       let privateKey: string
       try {
@@ -135,7 +135,7 @@ export default class Upload extends Command {
           experience: Boolean(alipayConf.experience),
           onProgressUpdate: log,
         })
-        log(chalk.green('\n支付宝小程序上传成功!'))
+        log(pc.green('\n支付宝小程序上传成功!'))
         log(alipayUploadResult)
         if (alipayUploadResult.qrCodeUrl && alipayConf.experience && alipayConf.experience.url && alipayConf.experience.method) {
           try {
@@ -147,21 +147,21 @@ export default class Upload extends Command {
             body = textInterpolations(body, 'description', flags.description || '空的版本描述')
             const result = await fetch(url, {method, body: body, headers: {'Content-Type': contentType}}).then((res: any) => res.json())
             if (result.errcode === 0) {
-              log(chalk.green('\n支付宝体验版二维码推送成功!'))
+              log(pc.green('\n支付宝体验版二维码推送成功!'))
             } else {
-              log(chalk.red('\n支付宝体验版二维码推送失败!'))
+              log(pc.red('\n支付宝体验版二维码推送失败!'))
             }
           } catch (error) {
             log(error)
-            log(chalk.red('\n支付宝体验版二维码推送失败!'))
+            log(pc.red('\n支付宝体验版二维码推送失败!'))
           }
         }
       } catch (error) {
-        log(chalk.red(`支付宝上传失败:${error} \n`))
+        log(pc.red(`支付宝上传失败:${error} \n`))
         log(error)
         return
       }
     }
-    log(chalk.green('\nUpload Done!'))
+    log(pc.green('\nUpload Done!'))
   }
 }

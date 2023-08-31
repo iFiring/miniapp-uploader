@@ -14,9 +14,6 @@ dependencies:
   '@oclif/plugin-help':
     specifier: ^3
     version: 3.2.2
-  chalk:
-    specifier: ^4.1.0
-    version: 4.1.0
   inquirer:
     specifier: ^8.0.0
     version: 8.0.0
@@ -32,6 +29,9 @@ dependencies:
   ora:
     specifier: ^5.4.0
     version: 5.4.0
+  picocolors:
+    specifier: ^1.0.0
+    version: 1.0.0
   tslib:
     specifier: ^1
     version: 1.10.0
@@ -9247,6 +9247,10 @@ packages:
 
   /phin@2.9.3:
     resolution: {integrity: sha512-CzFr90qM24ju5f88quFC/6qohjC144rehe5n6DH900lgXmUe86+xCKc10ev56gRKC4/BkHUoG4uSiQgBiIXwDA==}
+    dev: false
+
+  /picocolors@1.0.0:
+    resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
     dev: false
 
   /picomatch@2.2.2:
