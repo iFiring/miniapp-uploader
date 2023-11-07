@@ -12,6 +12,7 @@
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^3",
     "inquirer": "^8.0.0",
+    "minidev": "^1.9.3",
     "miniprogram-ci": "^1.1.6",
     "miniu": "^1.10.3",
     "node-fetch": "^2.6.1",

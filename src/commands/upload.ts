@@ -8,6 +8,10 @@ import {textInterpolations} from '../utils'
 const fs = require('fs')
 const pc = require('picocolors')
 const fetch = require('node-fetch')
+// const { minidev } = require('minidev');
+
+// const { upload: alipayUpload } = minidev
+
 // eslint-disable-next-line no-console
 // eslint-disable-next-line node/no-unsupported-features/node-builtins
 const {log, table} = console
@@ -126,6 +130,10 @@ export default class Upload extends Command {
         toolId: alipayConf.toolId,
         privateKey,
       })
+      // await minidev.config.useRuntime({
+      //   'alipay.authentication.privateKey': privateKey,
+      //   'alipay.authentication.toolId': alipayConf.toolId,
+      // });
       try {
         const alipayUploadResult = await alipayUpload({
           project: `${_PWD_}/${alipayConf.projectPath}`,
@@ -135,6 +143,18 @@ export default class Upload extends Command {
           experience: Boolean(alipayConf.experience),
           onProgressUpdate: log,
         })
+        // const alipayUploadResult = await alipayUpload({
+        //   project: `${_PWD_}/${alipayConf.projectPath}`,
+        //   appId: alipayConf.appid,
+        //   version: flags.version === 'undefined' ? undefined : flags.version, // 为undefined则线上包版本自增0.0.1
+        //   clientType: 'alipay',
+        //   experience: Boolean(alipayConf.experience),
+        // }, {
+        //   onLog: (data: any) => {
+        //     // 输出日志
+        //     log(data);
+        //   }
+        // })
         log(pc.green('\n支付宝小程序上传成功!'))
         log(alipayUploadResult)
         if (alipayUploadResult.qrCodeUrl && alipayConf.experience && alipayConf.experience.url && alipayConf.experience.method) {
