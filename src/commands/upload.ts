@@ -1,3 +1,6 @@
+import {readFileSync} from 'fs'
+import pc from 'picocolors'
+import fetch from 'node-fetch'
 import {Command, flags} from '@oclif/command'
 import {Project as WechatInit, upload as wechatUpload} from 'miniprogram-ci'
 import {setConfig as alipayInit, miniUpload as alipayUpload} from 'miniu'
@@ -5,12 +8,14 @@ import {setConfig as alipayInit, miniUpload as alipayUpload} from 'miniu'
 import {Config} from '../types'
 import {textInterpolations} from '../utils'
 
-const fs = require('fs')
-const chalk = require('chalk')
-const fetch = require('node-fetch')
 // eslint-disable-next-line no-console
 // eslint-disable-next-line node/no-unsupported-features/node-builtins
 const {log, table} = console
+
+const Types = {
+  wechat: '微信',
+  alipay: '支付宝',
+}
 
 export default class Upload extends Command {
   static description = '小程序上传命令'
@@ -35,7 +40,7 @@ export default class Upload extends Command {
 
     let projectConfig: Config.Configs
     try {
-      projectConfig = JSON.parse(fs.readFileSync(`${_PWD_}/miniuper.json`, 'utf8'))
+      projectConfig = JSON.parse(readFileSync(`${_PWD_}/miniuper.json`, 'utf8'))
     } catch (error) {
       log(error)
       log('当前目录下 miniuper.json 配置文件读取失败，请使用 miniuper init 命令生成该配置文件!')
@@ -45,7 +50,7 @@ export default class Upload extends Command {
     const {type} = args
     if ((!type || type === 'wechat') && projectConfig.wechat) {
       // 微信小程序上传
-      log(chalk.yellow('微信小程序开始上传\n'))
+      log(pc.yellow('微信小程序开始上传\n'))
       const wechatConf = projectConfig.wechat
       table && table({
         appid: wechatConf.appid,
@@ -65,7 +70,7 @@ export default class Upload extends Command {
           ignores: ['node_modules/**/*'],
         })
       } catch (error) {
-        log(chalk.red(`微信初始化失败:${error} \n`))
+        log(pc.red(`微信初始化失败:${error} \n`))
         log(error)
         return
       }
@@ -85,17 +90,24 @@ export default class Upload extends Command {
               if (status === 'doing') {
                 log(`${message}上传中...`)
               } else if (status === 'done') {
-                log(chalk.blue(`${message}上传成功!`))
+                log(pc.blue(`${message}上传成功!`))
               } else {
-                log(chalk.red(`上传失败:${message}`))
+                log(pc.red(`上传失败:${message}`))
               }
             }
           },
         })
-        log(chalk.green('\n微信小程序上传成功!'))
+        log(pc.green('\n微信小程序上传成功!'))
         log(wechatUploadResult)
+        if (wechatConf.experience && wechatConf.experience.url && wechatConf.experience.method) {
+          await this.pushDingding({
+            experience: wechatConf.experience,
+            version: flags.version,
+            description: flags.description,
+          })
+        }
       } catch (error) {
-        log(chalk.red(`微信上传失败:${error} \n`))
+        log(pc.red(`微信上传失败:${error} \n`))
         log(error)
         return
       }
@@ -103,11 +115,11 @@ export default class Upload extends Command {
 
     if ((!type || type === 'alipay') && projectConfig.alipay) {
       // 支付宝小程序上传
-      log(chalk.yellow('支付宝小程序开始上传\n'))
+      log(pc.yellow('支付宝小程序开始上传\n'))
       const alipayConf = projectConfig.alipay
       let privateKey: string
       try {
-        privateKey = fs.readFileSync(`${_PWD_}/${alipayConf.privateKeyPath}`, 'utf8')
+        privateKey = readFileSync(`${_PWD_}/${alipayConf.privateKeyPath}`, 'utf8')
       } catch (error) {
         log(error)
         log(`当前目录下支付宝上传私钥文件 ${alipayConf.privateKeyPath} 读取失败，检查该文件!`)
@@ -135,33 +147,49 @@ export default class Upload extends Command {
           experience: Boolean(alipayConf.experience),
           onProgressUpdate: log,
         })
-        log(chalk.green('\n支付宝小程序上传成功!'))
+        log(pc.green('\n支付宝小程序上传成功!'))
         log(alipayUploadResult)
         if (alipayUploadResult.qrCodeUrl && alipayConf.experience && alipayConf.experience.url && alipayConf.experience.method) {
-          try {
-            const {qrCodeUrl, packageVersion} = alipayUploadResult
-            const {url, method, contentType} = alipayConf.experience
-            let {body} = alipayConf.experience
-            body = textInterpolations(body, 'qrCodeUrl', qrCodeUrl)
-            body = textInterpolations(body, 'version', packageVersion)
-            body = textInterpolations(body, 'description', flags.description || '空的版本描述')
-            const result = await fetch(url, {method, body: body, headers: {'Content-Type': contentType}}).then((res: any) => res.json())
-            if (result.errcode === 0) {
-              log(chalk.green('\n支付宝体验版二维码推送成功!'))
-            } else {
-              log(chalk.red('\n支付宝体验版二维码推送失败!'))
-            }
-          } catch (error) {
-            log(error)
-            log(chalk.red('\n支付宝体验版二维码推送失败!'))
-          }
+          const {qrCodeUrl, packageVersion} = alipayUploadResult
+          await this.pushDingding({
+            experience: alipayConf.experience,
+            qrCodeUrl,
+            version: packageVersion,
+            description: flags.description,
+            type: 'alipay',
+          })
         }
       } catch (error) {
-        log(chalk.red(`支付宝上传失败:${error} \n`))
+        log(pc.red(`支付宝上传失败:${error} \n`))
         log(error)
         return
       }
     }
-    log(chalk.green('\nUpload Done!'))
+    log(pc.green('\nUpload Done!'))
+  }
+
+  async pushDingding({
+    experience,
+    qrCodeUrl,
+    version,
+    description,
+    type = 'wechat',
+  }: {experience: Config.Experience; qrCodeUrl?: string; version?: string; description?: string; type?: 'wechat' | 'alipay'}) {
+    try {
+      const {url, method, contentType} = experience
+      let {body} = experience
+      body = qrCodeUrl ? textInterpolations(body, 'qrCodeUrl', qrCodeUrl) : body
+      body = textInterpolations(body, 'version', version || '0.0.0')
+      body = textInterpolations(body, 'description', description || '空的版本描述')
+      const result = await fetch(url, {method, body, headers: {'Content-Type': contentType}}).then((res: any) => res.json())
+      if (result.errcode === 0) {
+        log(pc.green(`\n${Types[type]}体验版二维码推送成功!`))
+      } else {
+        log(pc.red(`\n${Types[type]}体验版二维码推送失败!`))
+      }
+    } catch (error) {
+      log(error)
+      log(pc.red(`\n${Types[type]}体验版二维码推送失败!`))
+    }
   }
 }
