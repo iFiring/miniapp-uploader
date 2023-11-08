@@ -1,7 +1,7 @@
 {
   "name": "miniapp-uploader",
   "description": "小程序自动化代码上传工具",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "iFiring",
   "bin": {
     "miniuper": "./bin/run"
