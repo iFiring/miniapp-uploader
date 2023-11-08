@@ -1,3 +1,5 @@
+import '@oclif/parser/lib/flags'
+
 export namespace Config {
   // 体验二维码自动推送
   interface Experience {
