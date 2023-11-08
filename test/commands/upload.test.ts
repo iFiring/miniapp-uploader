@@ -38,6 +38,25 @@ describe('upload', () => {
 
   test
   .timeout(600000)
+  .do(() => updateMiniuperJson({
+    wechat: {
+      experience: {
+        url: 'https://oapi.dingtalk.com/robot/send?access_token=a7251671751e04e7bed6cb1248bb88860c415a8c38d83a2829feb757e31626b8',
+        method: 'POST',
+        contentType: 'application/json',
+        body: '{"msgtype":"markdown","markdown":{"title":"体验版","text":"#### 支付宝体验版：\n![支付宝体验版](https://images.wosaimg.com/58/83e2991e8cfa82c2dcda179d48b104d821c9b2.jpg)\n##### 版本号: {{version}}\n##### 版本描述: {{description}}"},"at":{"isAtAll":true}}',
+      },
+    },
+  }))
+  .stdout()
+  .command(['upload', 'wechat', '-v', 'undefined', '-p', workDir])
+  .it('运行微信上传命令', ctx => {
+    expect(ctx.stdout).to.contain('微信小程序上传成功!')
+    expect(ctx.stdout).to.contain('微信体验版二维码推送成功!')
+  })
+
+  test
+  .timeout(600000)
   .do(() => updateMiniuperJson({alipay: {experience: {method: 'METHOD'}}}))
   .stdout()
   .command(['upload', 'alipay', '-v', 'undefined', '-p', workDir])
